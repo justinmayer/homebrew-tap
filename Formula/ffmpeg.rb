@@ -39,6 +39,8 @@ class Ffmpeg < Formula
   depends_on "pkg-config" => :build
   depends_on "texi2html" => :build
 
+  depends_on "fontconfig"
+  depends_on "freetype"
   depends_on "lame"
   depends_on "libvorbis"
   depends_on "libvpx"
@@ -54,8 +56,6 @@ class Ffmpeg < Formula
   depends_on "aom" => :optional
   depends_on "chromaprint" => :optional
   depends_on "fdk-aac" => :optional
-  depends_on "fontconfig" => :optional
-  depends_on "freetype" => :optional
   depends_on "frei0r" => :optional
   depends_on "game-music-emu" => :optional
   depends_on "libass" => :optional
@@ -97,6 +97,8 @@ class Ffmpeg < Formula
       --host-ldflags=#{ENV.ldflags}
       --enable-ffplay
       --enable-gpl
+      --enable-libfontconfig
+      --enable-libfreetype
       --enable-libmp3lame
       --enable-libopus
       --enable-libsnappy
@@ -117,8 +119,6 @@ class Ffmpeg < Formula
     args << "--enable-libbs2b" if build.with? "libbs2b"
     args << "--enable-libcaca" if build.with? "libcaca"
     args << "--enable-libfdk-aac" if build.with? "fdk-aac"
-    args << "--enable-libfontconfig" if build.with? "fontconfig"
-    args << "--enable-libfreetype" if build.with? "freetype"
     args << "--enable-libgme" if build.with? "game-music-emu"
     args << "--enable-libgsm" if build.with? "libgsm"
     args << "--enable-libmodplug" if build.with? "libmodplug"
