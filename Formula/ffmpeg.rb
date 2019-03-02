@@ -85,14 +85,12 @@ class Ffmpeg < Formula
     args = %W[
       --prefix=#{prefix}
       --enable-shared
-      --enable-pthreads
       --enable-version3
       --enable-hardcoded-tables
       --enable-avresample
       --cc=#{ENV.cc}
       --host-cflags=#{ENV.cflags}
       --host-ldflags=#{ENV.ldflags}
-      --enable-ffplay
       --enable-gpl
       --enable-libfontconfig
       --enable-libfreetype
@@ -105,7 +103,6 @@ class Ffmpeg < Formula
       --enable-libx264
       --enable-libx265
       --enable-libxvid
-      --enable-lzma
     ]
 
     args << "--enable-chromaprint" if build.with? "chromaprint"
