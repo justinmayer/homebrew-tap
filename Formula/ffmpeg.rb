@@ -50,6 +50,12 @@ class Ffmpeg < Formula
   depends_on "x265"
   depends_on "xz"
 
+  unless OS.mac?
+    depends_on "zlib"
+    depends_on "bzip2"
+    depends_on "linuxbrew/xorg/libxv"
+  end
+
   depends_on "chromaprint" => :optional
   depends_on "fdk-aac" => :optional
   depends_on "game-music-emu" => :optional
@@ -103,6 +109,11 @@ class Ffmpeg < Formula
       --enable-frei0r
     ]
 
+    if OS.mac?
+      args << "--enable-opencl"
+      args << "--enable-videotoolbox"
+    end
+
     args << "--enable-chromaprint" if build.with? "chromaprint"
     args << "--enable-libbluray" if build.with? "libbluray"
     args << "--enable-libbs2b" if build.with? "libbs2b"
@@ -128,9 +139,7 @@ class Ffmpeg < Formula
     args << "--enable-libxvid" if build.with? "xvid"
     args << "--enable-libzimg" if build.with? "zimg"
     args << "--enable-libzmq" if build.with? "zeromq"
-    args << "--enable-opencl" if MacOS.version > :lion
     args << "--enable-openssl" if build.with? "openssl"
-    args << "--enable-videotoolbox" if MacOS.version >= :mountain_lion
 
     # packages that need additional license options
     if build.with? "opencore-amr" or build.with? "libvmaf"
