@@ -11,7 +11,6 @@ class Ffmpeg < Formula
 
   option "with-chromaprint", "Enable the Chromaprint audio fingerprinting library"
   option "with-fdk-aac", "Enable the Fraunhofer FDK AAC library"
-  option "with-libass", "Enable ASS/SSA subtitle format"
   option "with-librsvg", "Enable SVG files as inputs via librsvg"
   option "with-libsoxr", "Enable the soxr resample library"
   option "with-libssh", "Enable SFTP protocol via libssh"
@@ -28,7 +27,6 @@ class Ffmpeg < Formula
   option "with-zimg", "Enable z.lib zimg library"
   option "with-srt", "Enable SRT library"
   option "with-libvmaf", "Enable libvmaf scoring library"
-  option "with-aom", "Enable AV1 video codec"
 
   deprecated_option "with-libtesseract" => "with-tesseract"
 
@@ -36,9 +34,12 @@ class Ffmpeg < Formula
   depends_on "pkg-config" => :build
   depends_on "texi2html" => :build
 
+  depends_on "aom"
   depends_on "fontconfig"
   depends_on "freetype"
+  depends_on "frei0r"
   depends_on "lame"
+  depends_on "libass"
   depends_on "libvorbis"
   depends_on "libvpx"
   depends_on "opus"
@@ -50,12 +51,9 @@ class Ffmpeg < Formula
   depends_on "xvid"
   depends_on "xz"
 
-  depends_on "aom" => :optional
   depends_on "chromaprint" => :optional
   depends_on "fdk-aac" => :optional
-  depends_on "frei0r" => :optional
   depends_on "game-music-emu" => :optional
-  depends_on "libass" => :optional
   depends_on "libbluray" => :optional
   depends_on "libbs2b" => :optional
   depends_on "libcaca" => :optional
@@ -90,6 +88,8 @@ class Ffmpeg < Formula
       --host-cflags=#{ENV.cflags}
       --host-ldflags=#{ENV.ldflags}
       --enable-gpl
+      --enable-libaom
+      --enable-libass
       --enable-libfontconfig
       --enable-libfreetype
       --enable-libmp3lame
@@ -101,12 +101,10 @@ class Ffmpeg < Formula
       --enable-libx264
       --enable-libx265
       --enable-libxvid
+      --enable-frei0r
     ]
 
     args << "--enable-chromaprint" if build.with? "chromaprint"
-    args << "--enable-frei0r" if build.with? "frei0r"
-    args << "--enable-libaom" if build.with? "aom"
-    args << "--enable-libass" if build.with? "libass"
     args << "--enable-libbluray" if build.with? "libbluray"
     args << "--enable-libbs2b" if build.with? "libbs2b"
     args << "--enable-libcaca" if build.with? "libcaca"
