@@ -48,7 +48,6 @@ class Ffmpeg < Formula
   depends_on "theora"
   depends_on "x264"
   depends_on "x265"
-  depends_on "xvid"
   depends_on "xz"
 
   depends_on "chromaprint" => :optional
@@ -76,6 +75,7 @@ class Ffmpeg < Formula
   depends_on "two-lame" => :optional
   depends_on "wavpack" => :optional
   depends_on "webp" => :optional
+  depends_on "xvid" => :optional
   depends_on "zeromq" => :optional
   depends_on "zimg" => :optional
 
@@ -100,7 +100,6 @@ class Ffmpeg < Formula
       --enable-libvpx
       --enable-libx264
       --enable-libx265
-      --enable-libxvid
       --enable-frei0r
     ]
 
@@ -126,6 +125,7 @@ class Ffmpeg < Formula
     args << "--enable-libvmaf" if build.with? "libvmaf"
     args << "--enable-libwavpack" if build.with? "wavpack"
     args << "--enable-libwebp" if build.with? "webp"
+    args << "--enable-libxvid" if build.with? "xvid"
     args << "--enable-libzimg" if build.with? "zimg"
     args << "--enable-libzmq" if build.with? "zeromq"
     args << "--enable-opencl" if MacOS.version > :lion
