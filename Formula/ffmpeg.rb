@@ -107,6 +107,8 @@ class Ffmpeg < Formula
       --enable-libx264
       --enable-libx265
       --enable-frei0r
+      --disable-libjack
+      --disable-indev=jack
     ]
 
     if OS.mac?
