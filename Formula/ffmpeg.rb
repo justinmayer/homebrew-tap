@@ -85,7 +85,6 @@ class Ffmpeg < Formula
     args = %W[
       --prefix=#{prefix}
       --enable-shared
-      --enable-version3
       --enable-hardcoded-tables
       --cc=#{ENV.cc}
       --host-cflags=#{ENV.cflags}
@@ -115,7 +114,6 @@ class Ffmpeg < Formula
     args << "--enable-libgme" if build.with? "game-music-emu"
     args << "--enable-libgsm" if build.with? "libgsm"
     args << "--enable-libmodplug" if build.with? "libmodplug"
-    args << "--enable-libopencore-amrnb" << "--enable-libopencore-amrwb" if build.with? "opencore-amr"
     args << "--enable-libopenh264" if build.with? "openh264"
     args << "--enable-librsvg" if build.with? "librsvg"
     args << "--enable-librtmp" if build.with? "rtmpdump"
@@ -135,6 +133,16 @@ class Ffmpeg < Formula
     args << "--enable-opencl" if MacOS.version > :lion
     args << "--enable-openssl" if build.with? "openssl"
     args << "--enable-videotoolbox" if MacOS.version >= :mountain_lion
+
+    # packages that need additional license options
+    if build.with? "opencore-amr" or build.with? "libvmaf"
+      args << "--enable-version3"
+    end
+
+    if build.with? "opencore-amr"
+      args << "--enable-libopencore-amrnb"
+      args << "--enable-libopencore-amrwb"
+    end
 
     if build.with? "openjpeg"
       args << "--enable-libopenjpeg"
