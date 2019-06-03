@@ -2,7 +2,10 @@
 
 This repository contains Homebrew (AKA, Brew) “formulae” that include options, which Homebrew project maintainers [removed][] as of Homebrew version 2.0.
 
-For the moment, this repository consists of a single formula: FFmpeg
+Formulae for the following software are included in this repository:
+
+* [FFmpeg][]
+* [Music Player Daemon (MPD)][]
 
 ## Installation
 
@@ -22,3 +25,5 @@ Alternatively, you can install the formula by naming it explicitly:
 
 
 [removed]: https://github.com/Homebrew/homebrew-core/issues/31510
+[FFmpeg]: https://ffmpeg.org
+[Music Player Daemon (MPD)]: https://musicpd.org
