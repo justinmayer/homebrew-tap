@@ -18,7 +18,10 @@ Then look at the formula source and choose which options you want — the option
     brew tap justinmayer/tap
     brew install justinmayer/tap/ffmpeg --with-chromaprint --with-fdk-aac --with-srt
 
+If you want the `fpcalc` CLI executable that is part of the Chromaprint project, download it from the [Chromaprint][] site, expand, and put it somewhere on your `PATH`.
+
 
 [removed]: https://github.com/Homebrew/homebrew-core/issues/31510
 [FFmpeg]: https://ffmpeg.org
 [Music Player Daemon (MPD)]: https://musicpd.org
+[Chromaprint]: https://acoustid.org/chromaprint
