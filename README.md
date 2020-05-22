@@ -5,7 +5,9 @@ This repository contains Homebrew (AKA, Brew) “formulae” that include option
 Formulae for the following software are included in this repository:
 
 * [FFmpeg][]
+* [Chromaprint][]
 * [Music Player Daemon (MPD)][]
+* [Pianobar][]
 
 ## Installation
 
@@ -25,3 +27,4 @@ If you want the `fpcalc` CLI executable that is part of the Chromaprint project,
 [FFmpeg]: https://ffmpeg.org
 [Music Player Daemon (MPD)]: https://musicpd.org
 [Chromaprint]: https://acoustid.org/chromaprint
+[Pianobar]: https://github.com/PromyLOPh/pianobar
