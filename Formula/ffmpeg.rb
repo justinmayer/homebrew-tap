@@ -9,6 +9,7 @@ class Ffmpeg < Formula
   bottle :unneeded
 
   option "with-chromaprint", "Enable the Chromaprint audio fingerprinting library"
+  option "with-decklink", "Enable DeckLink support"
   option "with-fdk-aac", "Enable the Fraunhofer FDK AAC library"
   option "with-librsvg", "Enable SVG files as inputs via librsvg"
   option "with-libsoxr", "Enable the soxr resample library"
@@ -26,14 +27,14 @@ class Ffmpeg < Formula
   option "with-zimg", "Enable z.lib zimg library"
   option "with-srt", "Enable SRT library"
   option "with-libvmaf", "Enable libvmaf scoring library"
-
-  deprecated_option "with-libtesseract" => "with-tesseract"
+  option "with-libxml2", "Enable libxml2 library"
 
   depends_on "nasm" => :build
   depends_on "pkg-config" => :build
   depends_on "texi2html" => :build
 
   depends_on "aom"
+  depends_on "dav1d"
   depends_on "fontconfig"
   depends_on "freetype"
   depends_on "frei0r"
@@ -68,10 +69,11 @@ class Ffmpeg < Formula
   depends_on "libssh" => :optional
   depends_on "libvidstab" => :optional
   depends_on "libvmaf" => :optional
+  depends_on "libxml2" => :optional
   depends_on "opencore-amr" => :optional
   depends_on "openh264" => :optional
   depends_on "openjpeg" => :optional
-  depends_on "openssl" => :optional
+  depends_on "openssl@1.1" => :optional
   depends_on "rtmpdump" => :optional
   depends_on "rubberband" => :optional
   depends_on "speex" => :optional
@@ -85,16 +87,20 @@ class Ffmpeg < Formula
   depends_on "zimg" => :optional
 
   def install
+    # Work around Xcode 11 clang bug
+    # https://bitbucket.org/multicoreware/x265/issues/514/wrong-code-generated-on-macos-1015
+    ENV.append_to_cflags "-fno-stack-check" if DevelopmentTools.clang_build_version >= 1010
+
     args = %W[
       --prefix=#{prefix}
       --enable-shared
-      --enable-hardcoded-tables
       --cc=#{ENV.cc}
       --host-cflags=#{ENV.cflags}
       --host-ldflags=#{ENV.ldflags}
       --enable-gpl
       --enable-libaom
       --enable-libass
+      --enable-libdav1d
       --enable-libfontconfig
       --enable-libfreetype
       --enable-libmp3lame
@@ -124,6 +130,7 @@ class Ffmpeg < Formula
     args << "--enable-libgsm" if build.with? "libgsm"
     args << "--enable-libmodplug" if build.with? "libmodplug"
     args << "--enable-libopenh264" if build.with? "openh264"
+    args << "--enable-libopenjpeg" if build.with? "openjpeg"
     args << "--enable-librsvg" if build.with? "librsvg"
     args << "--enable-librtmp" if build.with? "rtmpdump"
     args << "--enable-librubberband" if build.with? "rubberband"
@@ -137,30 +144,28 @@ class Ffmpeg < Formula
     args << "--enable-libvmaf" if build.with? "libvmaf"
     args << "--enable-libwavpack" if build.with? "wavpack"
     args << "--enable-libwebp" if build.with? "webp"
+    args << "--enable-libxml2" if build.with? "libxml2"
     args << "--enable-libxvid" if build.with? "xvid"
     args << "--enable-libzimg" if build.with? "zimg"
     args << "--enable-libzmq" if build.with? "zeromq"
     args << "--enable-openssl" if build.with? "openssl"
 
-    # packages that need additional license options
-    if build.with? "opencore-amr" or build.with? "libvmaf"
-      args << "--enable-version3"
+    # These librares are GPL-incompatible, and require ffmpeg be built with
+    # the "--enable-nonfree" flag, which produces unredistributable libraries
+    args << "--enable-nonfree" if build.with?("decklink") || build.with?("fdk-aac") || build.with?("openssl")
+
+    if build.with? "decklink"
+      args << "--enable-decklink"
+      args << "--extra-cflags=-I#{HOMEBREW_PREFIX}/include"
+      args << "--extra-ldflags=-L#{HOMEBREW_PREFIX}/include"
     end
+
+    args << "--enable-version3" if build.with?("opencore-amr") || build.with?("libvmaf")
 
     if build.with? "opencore-amr"
       args << "--enable-libopencore-amrnb"
       args << "--enable-libopencore-amrwb"
     end
-
-    if build.with? "openjpeg"
-      args << "--enable-libopenjpeg"
-      args << "--disable-decoder=jpeg2000"
-      args << "--extra-cflags=" + `pkg-config --cflags libopenjp2`.chomp
-    end
-
-    # These librares are GPL-incompatible, and require ffmpeg be built with
-    # the "--enable-nonfree" flag, which produces unredistributable libraries
-    args << "--enable-nonfree" if build.with?("fdk-aac") || build.with?("openssl")
 
     system "./configure", *args
     system "make", "install"
@@ -168,6 +173,14 @@ class Ffmpeg < Formula
     # Build and install additional FFmpeg tools
     system "make", "alltools"
     bin.install Dir["tools/*"].select { |f| File.executable? f }
+    mv bin/"python", pkgshare/"python", :force => true
+
+    if build.with? "tesseract"
+      opoo <<~EOS
+        The default `tesseract` dependency includes limited language support.
+        To add all supported languages, install the `tesseract-lang` formula.
+      EOS
+    end
   end
 
   test do
