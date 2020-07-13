@@ -20,6 +20,7 @@ class Ffmpeg < Formula
   option "with-openh264", "Enable OpenH264 library"
   option "with-openjpeg", "Enable JPEG 2000 image format"
   option "with-openssl", "Enable SSL support"
+  option "with-rav1e", "Enable AV1 encoding via librav1e"
   option "with-rtmpdump", "Enable RTMP protocol"
   option "with-rubberband", "Enable rubberband library"
   option "with-webp", "Enable using libwebp to encode WEBP images"
@@ -70,6 +71,7 @@ class Ffmpeg < Formula
   depends_on "openh264" => :optional
   depends_on "openjpeg" => :optional
   depends_on "openssl@1.1" => :optional
+  depends_on "rav1e" => :optional
   depends_on "rtmpdump" => :optional
   depends_on "rubberband" => :optional
   depends_on "speex" => :optional
@@ -127,6 +129,7 @@ class Ffmpeg < Formula
     args << "--enable-libmodplug" if build.with? "libmodplug"
     args << "--enable-libopenh264" if build.with? "openh264"
     args << "--enable-libopenjpeg" if build.with? "openjpeg"
+    args << "--enable-librav1e" if build.with? "rav1e"
     args << "--enable-librsvg" if build.with? "librsvg"
     args << "--enable-librtmp" if build.with? "rtmpdump"
     args << "--enable-librubberband" if build.with? "rubberband"
