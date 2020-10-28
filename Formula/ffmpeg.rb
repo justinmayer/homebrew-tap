@@ -3,6 +3,8 @@ class Ffmpeg < Formula
   homepage "https://ffmpeg.org/"
   url "https://ffmpeg.org/releases/ffmpeg-4.3.1.tar.xz"
   sha256 "ad009240d46e307b4e03a213a0f49c11b650e445b1f8be0dda2a9212b34d2ffb"
+  license "GPL-2.0-or-later"
+  revision 1
   head "https://github.com/FFmpeg/FFmpeg.git"
 
   # This formula is only for compiling from source, so there are no bottles.
@@ -11,6 +13,7 @@ class Ffmpeg < Formula
   option "with-chromaprint", "Enable the Chromaprint audio fingerprinting library"
   option "with-decklink", "Enable DeckLink support"
   option "with-fdk-aac", "Enable the Fraunhofer FDK AAC library"
+  option "with-game-music-emu", "Enable Game Music Emu (GME) support"
   option "with-librsvg", "Enable SVG files as inputs via librsvg"
   option "with-libsoxr", "Enable the soxr resample library"
   option "with-libssh", "Enable SFTP protocol via libssh"
@@ -32,7 +35,7 @@ class Ffmpeg < Formula
 
   depends_on "nasm" => :build
   depends_on "pkg-config" => :build
-  depends_on "texi2html" => :build
+  depends_on "texinfo" => :build
 
   depends_on "aom"
   depends_on "dav1d"
@@ -87,6 +90,13 @@ class Ffmpeg < Formula
   uses_from_macos "bzip2"
   uses_from_macos "zlib"
 
+  # https://trac.ffmpeg.org/ticket/8760
+  # Remove in next release
+  patch do
+    url "https://github.com/FFmpeg/FFmpeg/commit/7c59e1b0f285cd7c7b35fcd71f49c5fd52cf9315.patch?full_index=1"
+    sha256 "1cbe1b68d70eadd49080a6e512a35f3e230de26b6e1b1c859d9119906417737f"
+  end
+
   def install
     args = %W[
       --prefix=#{prefix}
@@ -94,6 +104,7 @@ class Ffmpeg < Formula
       --cc=#{ENV.cc}
       --host-cflags=#{ENV.cflags}
       --host-ldflags=#{ENV.ldflags}
+      --enable-demuxer=dash
       --enable-gpl
       --enable-libaom
       --enable-libass
@@ -172,7 +183,7 @@ class Ffmpeg < Formula
     # Build and install additional FFmpeg tools
     system "make", "alltools"
     bin.install Dir["tools/*"].select { |f| File.executable? f }
-    mv bin/"python", pkgshare/"python", :force => true
+    mv bin/"python", pkgshare/"python", force: true
 
     if build.with? "tesseract"
       opoo <<~EOS
