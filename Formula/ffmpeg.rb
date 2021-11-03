@@ -11,6 +11,7 @@ class Ffmpeg < Formula
   option "with-decklink", "Enable DeckLink support"
   option "with-fdk-aac", "Enable the Fraunhofer FDK AAC library"
   option "with-game-music-emu", "Enable Game Music Emu (GME) support"
+  option "with-jack", "Enable Jack support"
   option "with-librsvg", "Enable SVG files as inputs via librsvg"
   option "with-libsoxr", "Enable the soxr resample library"
   option "with-libssh", "Enable SFTP protocol via libssh"
@@ -54,6 +55,7 @@ class Ffmpeg < Formula
   depends_on "justinmayer/tap/chromaprint" => :optional
   depends_on "fdk-aac" => :optional
   depends_on "game-music-emu" => :optional
+  depends_on "jack" => :optional
   depends_on "libbluray" => :optional
   depends_on "libbs2b" => :optional
   depends_on "libcaca" => :optional
@@ -112,8 +114,6 @@ class Ffmpeg < Formula
       --enable-libx264
       --enable-libx265
       --enable-frei0r
-      --disable-libjack
-      --disable-indev=jack
     ]
 
     on_macos do
@@ -160,6 +160,12 @@ class Ffmpeg < Formula
       args << "--enable-decklink"
       args << "--extra-cflags=-I#{HOMEBREW_PREFIX}/include"
       args << "--extra-ldflags=-L#{HOMEBREW_PREFIX}/include"
+    end
+
+    if build.with? "jack"
+      ENV.prepend_path "PKG_CONFIG_PATH", Formula["jack"].opt_lib/"pkgconfig"
+      args << "--enable-libjack"
+      args << "--enable-indev=jack"
     end
 
     args << "--enable-version3" if build.with?("opencore-amr") || build.with?("libvmaf")
