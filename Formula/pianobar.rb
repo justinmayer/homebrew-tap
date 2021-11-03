@@ -5,9 +5,6 @@ class Pianobar < Formula
   sha256 "6c173b6b29ccc1f432e0013fb425e8f9cb4261539b58d344e0b2274963726480"
   head "https://github.com/PromyLOPh/pianobar.git"
 
-  # This formula is only for compiling from source, so there are no bottles.
-  bottle :unneeded
-
   depends_on "pkg-config" => :build
   depends_on "justinmayer/tap/ffmpeg"
   depends_on "json-c"

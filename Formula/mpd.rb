@@ -5,9 +5,6 @@ class Mpd < Formula
   sha256 "20a0ad01bf327b2dbeb6ae8e1af952cb0de83d2d63fab0fa4b7183a74765c201"
   head "https://github.com/MusicPlayerDaemon/MPD.git"
 
-  # This formula is only for compiling from source, so there are no bottles.
-  bottle :unneeded
-
   depends_on "boost" => :build
   depends_on "meson" => :build
   depends_on "ninja" => :build
